@@ -1,0 +1,22 @@
+# Core Frameworks
+streamlit
+ultralytics
+
+# Computer Vision & Image Processing
+# Gunakan -headless agar tidak error libGL di server Linux
+opencv-python-headless
+Pillow
+
+# Data Handling
+pandas
+numpy
+
+# Additional Tools (Penting agar tidak error saat deploy)
+requests
+pyyaml
+tqdm
+scipy
+
+# Jika kamu pakai fungsi koordinat/peta di Streamlit
+# folium
+# streamlit-folium
