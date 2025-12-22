@@ -11,12 +11,10 @@ Pillow
 pandas
 numpy
 
-# Additional Tools (Penting agar tidak error saat deploy)
+# Additional Tools
+torch--index-url https://download.pytorch.org/whl/cpu
 requests
 pyyaml
 tqdm
 scipy
 
-# Jika kamu pakai fungsi koordinat/peta di Streamlit
-# folium
-# streamlit-folium
