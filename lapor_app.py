@@ -7,21 +7,7 @@ import os
 import torch
 from ultralytics import YOLO
 
-torch.serialization.add_safe_globals([
-    'ultralytics.nn.tasks.DetectionModel',
-    'ultralytics.utils.iterable.Iterable',
-    'numpy.core.multiarray._reconstruct',
-    'numpy.ndarray',
-    'numpy.dtype'
-])
-
-# Gunakan ini jika error 'weights_only' masih muncul
-# Kita tidak menimpa torch.load, tapi memodifikasi parameter default-nya
-import functools
-torch.load = functools.partial(torch.load, weights_only=False)
-# ------------------------------------------
-
-# Load model
+torch.serialization.add_safe_globals(['ultralytics.nn.tasks.DetectionModel'])
 model = YOLO("best.pt")
 
 st.set_page_config(layout="wide")
