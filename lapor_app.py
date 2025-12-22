@@ -6,12 +6,8 @@ import pandas as pd
 import os
 import torch
 
-# izin keamanan untuk model YOLO
-try:
-    from ultralytics.nn.tasks import DetectionModel
-    torch.serialization.add_safe_globals([DetectionModel])
-except ImportError:
-    pass
+import torch.serialization
+torch.load = lambda *args, **kwargs: torch.serialization.load(*args, **kwargs, weights_only=False)
 
 from ultralytics import YOLO
 model = YOLO("best.pt")
