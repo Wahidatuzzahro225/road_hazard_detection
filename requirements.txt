@@ -1,10 +1,10 @@
 # Core Frameworks
 streamlit
-ultralytics
+ultralytics==8.0.145
 
 # Computer Vision & Image Processing
 # Gunakan -headless agar tidak error libGL di server Linux
-opencv-python-headless
+opencv-python-headless==4.8.0.74
 Pillow
 
 # Data Handling
