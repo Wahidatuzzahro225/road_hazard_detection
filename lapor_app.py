@@ -5,7 +5,6 @@ from ultralytics import YOLO
 import tempfile
 import pandas as pd
 import os
-
 st.set_page_config(layout="wide")
 st.title("Road Hazard Detection & Pelaporan Jalan Rusak")
 
