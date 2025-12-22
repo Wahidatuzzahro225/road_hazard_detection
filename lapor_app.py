@@ -7,8 +7,20 @@ import os
 import torch
 from ultralytics import YOLO
 
-torch.serialization.add_safe_globals(['ultralytics.nn.tasks.DetectionModel'])
-model = YOLO("best.pt")
+from datetime import datetime
+
+# Buat folder untuk simpan laporan
+os.makedirs("laporan", exist_ok=True)
+
+# Judul aplikasi
+st.title("Road Hazard Detection & Pelaporan Jalan Rusak")
+
+# Load model YOLO (pakai cache biar cepat)
+@st.cache_resource
+def load_model():
+    return YOLO("best.pt")
+
+model = load_model()
 
 st.set_page_config(layout="wide")
 st.title("Road Hazard Detection & Pelaporan Jalan Rusak")
