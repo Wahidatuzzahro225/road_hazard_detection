@@ -10,6 +10,7 @@ Pillow
 # Data Handling
 pandas
 numpy
+dill
 
 # Additional Tools
 requests
