@@ -6,20 +6,25 @@ import pandas as pd
 import os
 import torch
 
-# --- FIX UNPICKLING ERROR ---
+# --- FIX UNPICKLING ERROR (VERSI AMAN) ---
 import torch.serialization
-# Paksa semua proses loading torch untuk mengizinkan objek kustom
-def patched_torch_load(*args, **kwargs):
-    kwargs['weights_only'] = False
-    return torch.serialization._load(*args, **kwargs)
 
-torch.load = patched_torch_load
-# ----------------------------
+# Simpan fungsi asli torch.load
+original_torch_load = torch.load
+
+# Buat fungsi pembungkus yang memaksa weights_only=False
+def patched_load(*args, **kwargs):
+    kwargs['weights_only'] = False
+    return original_torch_load(*args, **kwargs)
+
+# Timpa fungsi torch.load dengan fungsi buatan kita
+torch.load = patched_load
+# -----------------------------------------
 
 from ultralytics import YOLO
-
 # Load model
 model = YOLO("best.pt")
+
 st.set_page_config(layout="wide")
 st.title("Road Hazard Detection & Pelaporan Jalan Rusak")
 
