@@ -128,8 +128,7 @@ if menu == "Upload Gambar":
 
 # ====================== UPLOAD VIDEO ======================
 elif menu == "Upload Video":
-    st.subheader("🎥 Upload Video Jalan")
-    uploaded_video = st.file_uploader("Pilih video jalan rusak", type=["mp4", "avi", "mov"])
+    uploaded_video = st.file_uploader("Upload Video", type=["mp4", "avi", "mov"])
 
     if uploaded_video is not None:
         tfile = tempfile.NamedTemporaryFile(delete=False)
@@ -138,8 +137,8 @@ elif menu == "Upload Video":
         cap = cv2.VideoCapture(tfile.name)
         frame_window = st.image([])
 
-        # Tombol untuk stop video
-        stop_button = st.button("⏹️ Stop Video & Isi Laporan")
+        # Tombol untuk stop video jika perlu
+        stop_button = st.button("Stop Video & Isi Laporan")
 
         while cap.isOpened():
             ret, frame = cap.read()
@@ -148,10 +147,11 @@ elif menu == "Upload Video":
 
             results = model(frame, conf=0.3)
             annotated = results[0].plot()
-            frame_window.image(annotated, channels="BGR", width=600)
+            frame_window.image(annotated, channels="BGR")
 
         cap.release()
         
+        # Tambahkan pembatas visual
         st.divider()
         st.header("📝 Form Pelaporan")
         
