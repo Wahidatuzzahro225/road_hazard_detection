@@ -5,23 +5,22 @@ import tempfile
 import pandas as pd
 import os
 import torch
-
-# --- FIX UNPICKLING ERROR (VERSI AMAN) ---
-import torch.serialization
-
-# Simpan fungsi asli torch.load
-original_torch_load = torch.load
-
-# Buat fungsi pembungkus yang memaksa weights_only=False
-def patched_load(*args, **kwargs):
-    kwargs['weights_only'] = False
-    return original_torch_load(*args, **kwargs)
-
-# Timpa fungsi torch.load dengan fungsi buatan kita
-torch.load = patched_load
-# -----------------------------------------
-
 from ultralytics import YOLO
+
+torch.serialization.add_safe_globals([
+    'ultralytics.nn.tasks.DetectionModel',
+    'ultralytics.utils.iterable.Iterable',
+    'numpy.core.multiarray._reconstruct',
+    'numpy.ndarray',
+    'numpy.dtype'
+])
+
+# Gunakan ini jika error 'weights_only' masih muncul
+# Kita tidak menimpa torch.load, tapi memodifikasi parameter default-nya
+import functools
+torch.load = functools.partial(torch.load, weights_only=False)
+# ------------------------------------------
+
 # Load model
 model = YOLO("best.pt")
 
