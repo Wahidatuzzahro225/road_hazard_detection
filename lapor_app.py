@@ -6,6 +6,21 @@ import pandas as pd
 import os
 import time
 from datetime import datetime
+import torch
+
+# PATCH torch.load SEBELUM import YOLO
+_original_torch_load = torch.load
+
+def patched_torch_load(f, *args, **kwargs):
+    # Force weights_only=False untuk ultralytics
+    if 'weights_only' not in kwargs:
+        kwargs['weights_only'] = False
+    return _original_torch_load(f, *args, **kwargs)
+
+torch.load = patched_torch_load
+
+# Import ultralytics SETELAH patch
+from ultralytics import YOLO
 
 # KONFIGURASI HALAMAN HARUS DI PALING ATAS
 st.set_page_config(layout="wide", page_title="Road Hazard Detection")
@@ -18,7 +33,6 @@ os.makedirs("laporan/gambar", exist_ok=True)
 @st.cache_resource
 def load_model():
     try:
-        from ultralytics import YOLO
         return YOLO("best.pt")
     except Exception as e:
         st.error(f"Error loading model: {str(e)}")
