@@ -64,7 +64,7 @@ if menu == "Upload Gambar":
             results = model(image, conf=0.3)
             annotated = results[0].plot()
 
-        st.image(annotated, channels="BGR", caption="Hasil Deteksi", use_container_width=True)
+        st.image(annotated, channels="BGR", caption="Hasil Deteksi", width=600)
 
         # Form pelaporan
         st.divider()
@@ -132,30 +132,23 @@ elif menu == "Upload Video":
     uploaded_video = st.file_uploader("Pilih video jalan rusak", type=["mp4", "avi", "mov"])
 
     if uploaded_video is not None:
-        tfile = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4')
+        tfile = tempfile.NamedTemporaryFile(delete=False)
         tfile.write(uploaded_video.read())
-        tfile.close()
 
         cap = cv2.VideoCapture(tfile.name)
-        frame_window = st.empty()
-        
-        col1, col2 = st.columns([1, 4])
-        with col1:
-            stop_button = st.button("⏹️ Stop Video")
+        frame_window = st.image([])
 
-        frame_count = 0
+        # Tombol untuk stop video
+        stop_button = st.button("⏹️ Stop Video & Isi Laporan")
+
         while cap.isOpened():
             ret, frame = cap.read()
             if not ret or stop_button:
                 break
 
-            # Process setiap 3 frame untuk performa
-            if frame_count % 3 == 0:
-                results = model(frame, conf=0.3)
-                annotated = results[0].plot()
-                frame_window.image(annotated, channels="BGR", use_container_width=True)
-            
-            frame_count += 1
+            results = model(frame, conf=0.3)
+            annotated = results[0].plot()
+            frame_window.image(annotated, channels="BGR", width=600)
 
         cap.release()
         
@@ -268,7 +261,7 @@ elif menu == "Realtime Camera":
                     st.session_state['last_frame'] = annotated
                     
                     # Tampilkan
-                    frame_window.image(annotated, channels="BGR", use_container_width=True)
+                    frame_window.image(annotated, channels="BGR", width=600)
                     
                     # Break jika checkbox dimatikan
                     if not st.session_state.get('camera_running', True):
