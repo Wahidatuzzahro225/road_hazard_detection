@@ -43,17 +43,17 @@ with st.spinner("Loading AI model..."):
     model = load_model()
 
 # Judul aplikasi
-st.title("🛣️ Road Hazard Detection & Pelaporan Jalan Rusak")
+st.title("Road Hazard Detection & Pelaporan Jalan Rusak")
 
 # Sidebar menu
 menu = st.sidebar.selectbox(
-    "🎯 Pilih Mode",
+    "Pilih Mode",
     ["Upload Gambar", "Upload Video", "Realtime Camera"]
 )
 
 # ====================== UPLOAD IMAGE ======================
 if menu == "Upload Gambar":
-    st.subheader("📷 Upload Gambar Jalan")
+    st.subheader("Upload Gambar Jalan")
     uploaded_img = st.file_uploader("Pilih gambar jalan rusak", type=["jpg", "png", "jpeg"])
 
     if uploaded_img is not None:
@@ -128,7 +128,7 @@ if menu == "Upload Gambar":
 
 # ====================== UPLOAD VIDEO ======================
 elif menu == "Upload Video":
-    st.subheader("🎥 Upload Video Jalan")
+    st.subheader("Upload Video Jalan")
     uploaded_video = st.file_uploader("Pilih video jalan rusak", type=["mp4", "avi", "mov"])
 
     if uploaded_video is not None:
@@ -234,7 +234,7 @@ elif menu == "Upload Video":
 
 # ====================== REALTIME CAMERA ======================
 elif menu == "Realtime Camera":
-    st.subheader("📹 Realtime Camera Detection")
+    st.subheader("Realtime Camera Detection")
     
     # Deteksi apakah di cloud atau lokal
     is_cloud = os.environ.get('STREAMLIT_SHARING_MODE') or os.environ.get('IS_DOCKER')
@@ -267,14 +267,14 @@ elif menu == "Realtime Camera":
         if 'last_frame' not in st.session_state:
             st.session_state['last_frame'] = None
         
-        run = st.checkbox("🎥 Aktifkan Kamera")
+        run = st.checkbox("Aktifkan Kamera")
         frame_window = st.empty()
         
         if run:
             cap = cv2.VideoCapture(0)
             
             if not cap.isOpened():
-                st.error("❌ Tidak dapat mengakses kamera. Pastikan kamera terhubung dan tidak digunakan aplikasi lain.")
+                st.error("❌ Tidak dapat mengakses kamera. Baca solusi di lapor_app.py untuk menjalankan di streamlit lokal. ")
             else:
                 st.info("✅ Kamera aktif. Arahkan ke jalan rusak untuk deteksi otomatis.")
                 
