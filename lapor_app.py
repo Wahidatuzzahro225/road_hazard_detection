@@ -137,8 +137,8 @@ elif menu == "Upload Video":
 
         cap = cv2.VideoCapture(tfile.name)
         
-        # Buat placeholder untuk video (PENTING: pakai st.empty())
-        frame_window = st.empty()
+        # Buat placeholder untuk video
+        frame_placeholder = st.empty()
         
         # Tombol stop
         stop_button = st.button("⏹️ Stop Video & Isi Laporan")
@@ -146,25 +146,31 @@ elif menu == "Upload Video":
         st.info("🎬 Memproses video... Tunggu hingga selesai atau tekan Stop.")
 
         frame_count = 0
+        processed_count = 0
         while cap.isOpened():
             ret, frame = cap.read()
             if not ret or stop_button:
                 break
 
-            # Deteksi setiap frame
-            results = model(frame, conf=0.3)
-            annotated = results[0].plot()
-            
-            # Update tampilan frame (PENTING: pakai .image() bukan .write())
-            frame_window.image(annotated, channels="BGR", width=600)
-            
             frame_count += 1
             
-            # Delay kecil untuk Streamlit update UI (PENTING!)
-            time.sleep(0.01)
+            # Proses setiap 2 frame (skip 1 frame untuk performa)
+            if frame_count % 2 == 0:
+                # Deteksi setiap frame
+                results = model(frame, conf=0.3, verbose=False)
+                annotated = results[0].plot()
+                
+                # Update tampilan frame
+                with frame_placeholder.container():
+                    st.image(annotated, channels="BGR", width=600)
+                
+                processed_count += 1
+                
+                # Delay untuk Streamlit update UI
+                time.sleep(0.03)  # 30ms = ~33 FPS max
 
         cap.release()
-        st.success(f"✅ Video selesai diproses! Total {frame_count} frames.")
+        st.success(f"✅ Video selesai! Total {frame_count} frames, diproses {processed_count} frames.")
         
         st.divider()
         st.header("📝 Form Pelaporan")
