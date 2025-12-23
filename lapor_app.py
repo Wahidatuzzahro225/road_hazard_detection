@@ -137,50 +137,34 @@ elif menu == "Upload Video":
 
         cap = cv2.VideoCapture(tfile.name)
         
-        # Info video
-        total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-        fps = cap.get(cv2.CAP_PROP_FPS)
-        if fps == 0:
-            fps = 30
-        
-        st.info(f"📊 Total frames: {total_frames} | FPS: {fps:.1f}")
-        
-        # Pilihan mode
-        mode = st.radio(
-            "Pilih Mode Proses:",
-            ["Real-time (Lambat tapi smooth)", "Fast (Cepat, skip beberapa frame)"],
-            horizontal=True
-        )
-        
-        # Buat placeholder
+        # Buat placeholder untuk video (PENTING: pakai st.empty())
         frame_window = st.empty()
-        progress_bar = st.progress(0)
         
-        # Tombol start
-        if st.button("▶️ Mulai Proses Video"):
-            frame_count = 0
-            skip_frames = 1 if mode.startswith("Real-time") else 3
-            
-            while cap.isOpened():
-                ret, frame = cap.read()
-                if not ret:
-                    break
-                
-                # Skip frame jika mode Fast
-                if frame_count % skip_frames == 0:
-                    results = model(frame, conf=0.3)
-                    annotated = results[0].plot()
-                    frame_window.image(annotated, channels="BGR", width=600)
-                
-                frame_count += 1
-                
-                # Update progress
-                if total_frames > 0:
-                    progress_bar.progress(min(frame_count / total_frames, 1.0))
+        # Tombol stop
+        stop_button = st.button("⏹️ Stop Video & Isi Laporan")
+        
+        st.info("🎬 Memproses video... Tunggu hingga selesai atau tekan Stop.")
 
-            cap.release()
-            progress_bar.progress(1.0)
-            st.success(f"✅ Video selesai! Total {frame_count} frames diproses.")
+        frame_count = 0
+        while cap.isOpened():
+            ret, frame = cap.read()
+            if not ret or stop_button:
+                break
+
+            # Deteksi setiap frame
+            results = model(frame, conf=0.3)
+            annotated = results[0].plot()
+            
+            # Update tampilan frame (PENTING: pakai .image() bukan .write())
+            frame_window.image(annotated, channels="BGR", width=600)
+            
+            frame_count += 1
+            
+            # Delay kecil untuk Streamlit update UI (PENTING!)
+            time.sleep(0.01)
+
+        cap.release()
+        st.success(f"✅ Video selesai diproses! Total {frame_count} frames.")
         
         st.divider()
         st.header("📝 Form Pelaporan")
