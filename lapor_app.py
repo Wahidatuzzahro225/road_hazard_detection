@@ -128,7 +128,7 @@ if menu == "Upload Gambar":
 
 # ====================== UPLOAD VIDEO ======================
 elif menu == "Upload Video":
-    st.subheader("Upload Video Jalan")
+    st.subheader("🎥 Upload Video Jalan")
     uploaded_video = st.file_uploader("Pilih video jalan rusak", type=["mp4", "avi", "mov"])
 
     if uploaded_video is not None:
@@ -181,8 +181,7 @@ elif menu == "Upload Video":
             cap.release()
             progress_bar.progress(1.0)
             st.success(f"✅ Video selesai! Total {frame_count} frames diproses.")
-
-        # Tambahkan pembatas visual
+        
         st.divider()
         st.header("📝 Form Pelaporan")
         
